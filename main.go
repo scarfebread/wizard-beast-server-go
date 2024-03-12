@@ -4,6 +4,7 @@ import (
 	"log"
 	"sync"
 	"wizard-beast-server-go/engine"
+	"wizard-beast-server-go/entity"
 	"wizard-beast-server-go/server"
 )
 
@@ -12,13 +13,18 @@ func main() {
 
 	wg.Add(2)
 
-	go startServer(wg)
+	playerRepository := entity.CreatePlayerRepository()
+	server := server.Server{ // TODO server
+		PlayerRepository: playerRepository,
+	}
+
+	go startServer(wg, server)
 	go startEngine(wg)
 
 	wg.Wait()
 }
 
-func startServer(wg *sync.WaitGroup) {
+func startServer(wg *sync.WaitGroup, server server.Server) {
 	defer wg.Done()
 
 	err := server.Start()
@@ -28,7 +34,7 @@ func startServer(wg *sync.WaitGroup) {
 	}
 }
 
-func startEngine(wg *sync.WaitGroup) {
+func startEngine(wg *sync.WaitGroup) { // TODO this is duplicated but might make sense as I add more
 	defer wg.Done()
 
 	err := engine.Start()

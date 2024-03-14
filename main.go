@@ -5,7 +5,7 @@ import (
 	"sync"
 	"wizard-beast-server-go/engine"
 	"wizard-beast-server-go/entity"
-	"wizard-beast-server-go/server"
+	"wizard-beast-server-go/udp"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 	wg.Add(2)
 
 	playerRepository := entity.CreatePlayerRepository()
-	server := server.Server{ // TODO server
+	server := udp.Server{
 		PlayerRepository: playerRepository,
 	}
 
@@ -24,7 +24,7 @@ func main() {
 	wg.Wait()
 }
 
-func startServer(wg *sync.WaitGroup, server server.Server) {
+func startServer(wg *sync.WaitGroup, server udp.Server) {
 	defer wg.Done()
 
 	err := server.Start()

@@ -1,6 +1,6 @@
 package request
 
-import "wizard-beast-server-go/entity"
+import "wizard-beast-server-go/player"
 
 type acknowledgeRequest struct {
 	ID string `json:"id"`
@@ -8,7 +8,7 @@ type acknowledgeRequest struct {
 
 func ProcessAcknowledge(
 	data string,
-	repository entity.PlayerRepository,
+	repository player.Repository,
 ) {
 
 }

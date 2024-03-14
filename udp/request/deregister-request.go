@@ -1,6 +1,6 @@
 package request
 
-import "wizard-beast-server-go/entity"
+import "wizard-beast-server-go/player"
 
 type deregisterRequest struct {
 	ID string `json:"id"`
@@ -8,7 +8,7 @@ type deregisterRequest struct {
 
 func ProcessDeregistration(
 	data string,
-	repository entity.PlayerRepository,
+	repository player.Repository,
 ) {
 
 }

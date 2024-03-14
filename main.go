@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 	"wizard-beast-server-go/engine"
-	"wizard-beast-server-go/entity"
+	"wizard-beast-server-go/player"
 	"wizard-beast-server-go/udp"
 )
 
@@ -13,7 +13,7 @@ func main() {
 
 	wg.Add(2)
 
-	playerRepository := entity.CreatePlayerRepository()
+	playerRepository := player.CreatePlayerRepository()
 	server := udp.Server{
 		PlayerRepository: playerRepository,
 	}

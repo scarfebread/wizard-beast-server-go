@@ -6,12 +6,12 @@ import (
 	"log/slog"
 	"net"
 	"strings"
-	"wizard-beast-server-go/entity"
+	"wizard-beast-server-go/player"
 	"wizard-beast-server-go/udp/request"
 )
 
 type Server struct {
-	PlayerRepository entity.PlayerRepository
+	PlayerRepository player.Repository
 }
 
 func (server Server) Start() error {

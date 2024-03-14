@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
-	"wizard-beast-server-go/entity"
+	"wizard-beast-server-go/player"
 	"wizard-beast-server-go/udp"
 )
 
@@ -17,7 +17,7 @@ func ProcessRegistration(
 	id string,
 	data string,
 	addr *net.UDPAddr,
-	repository entity.PlayerRepository,
+	repository player.Repository,
 	client udp.Client,
 ) {
 	var req registerRequest
@@ -28,7 +28,7 @@ func ProcessRegistration(
 		return
 	}
 
-	player := entity.Player{
+	player := player.Player{
 		Name: req.Name,
 		Addr: addr,
 	}

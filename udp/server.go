@@ -6,12 +6,20 @@ import (
 	"log/slog"
 	"net"
 	"strings"
-	"wizard-beast-server-go/player"
-	"wizard-beast-server-go/udp/request"
 )
 
 type Server struct {
-	PlayerRepository player.Repository
+	Processor Processor
+}
+
+type Processor interface {
+	Process(
+		id string,
+		event string,
+		payload string,
+		addr *net.UDPAddr,
+		client Client,
+	)
 }
 
 func (server Server) Start() error {
@@ -60,24 +68,13 @@ func (server Server) processEvent(conn *net.UDPConn) {
 
 	client := Client{conn, addr}
 
-	switch event {
-	case "register":
-		request.ProcessRegistration(
-			id,
-			payload,
-			addr,
-			server.PlayerRepository,
-			client,
-		)
-	case "deregister":
-		request.ProcessDeregistration(payload, server.PlayerRepository)
-	case "update":
-		request.ProcessAction(payload, server.PlayerRepository)
-	case "acknowledge":
-		request.ProcessAcknowledge(payload, server.PlayerRepository)
-	default:
-		client.Send("invalid", "unknown request", id)
-	}
+	server.Processor.Process(
+		id,
+		event,
+		payload,
+		addr,
+		client,
+	)
 }
 
 func extract(buf [512]byte) (event string, payload string, id string, err error) {

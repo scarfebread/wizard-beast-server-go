@@ -5,6 +5,7 @@ import (
 	"sync"
 	"wizard-beast-server-go/engine"
 	"wizard-beast-server-go/player"
+	"wizard-beast-server-go/request"
 	"wizard-beast-server-go/udp"
 )
 
@@ -15,7 +16,7 @@ func main() {
 
 	playerRepository := player.CreatePlayerRepository()
 	server := udp.Server{
-		PlayerRepository: playerRepository,
+		Processor: request.Processor{PlayerRepository: playerRepository},
 	}
 
 	go startServer(wg, server)

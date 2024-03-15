@@ -1,9 +1,9 @@
 package request
 
 import (
+	"github.com/scarfebread/wizard-beast-server-go/internal/player"
+	"github.com/scarfebread/wizard-beast-server-go/internal/udp"
 	"net"
-	"wizard-beast-server-go/player"
-	"wizard-beast-server-go/udp"
 )
 
 type Processor struct {
@@ -22,7 +22,6 @@ func (processor Processor) Process(
 		ProcessRegistration(
 			id,
 			payload,
-			addr,
 			processor.PlayerRepository,
 			client,
 		)

@@ -1,6 +1,6 @@
 package request
 
-import "wizard-beast-server-go/player"
+import "github.com/scarfebread/wizard-beast-server-go/internal/player"
 
 type actionRequest struct {
 	ID string `json:"id"`

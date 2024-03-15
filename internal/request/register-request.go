@@ -3,10 +3,9 @@ package request
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/scarfebread/wizard-beast-server-go/internal/player"
+	"github.com/scarfebread/wizard-beast-server-go/internal/udp"
 	"log/slog"
-	"net"
-	"wizard-beast-server-go/player"
-	"wizard-beast-server-go/udp"
 )
 
 type registerRequest struct {
@@ -16,7 +15,6 @@ type registerRequest struct {
 func ProcessRegistration(
 	id string,
 	data string,
-	addr *net.UDPAddr,
 	repository player.Repository,
 	client udp.Client,
 ) {
@@ -28,17 +26,17 @@ func ProcessRegistration(
 		return
 	}
 
-	player := player.Player{
-		Name: req.Name,
-		Addr: addr,
+	p := player.Player{
+		Name:   req.Name,
+		Client: client,
 	}
-	repository.AddPlayer(player)
+	repository.AddPlayer(p)
 
-	serialisedPlayer, err := player.Serialise()
+	serialisedPlayer, err := p.Serialise()
 
 	if err != nil {
-		slog.Warn(fmt.Sprintf("cannot serialise player %s", player.Name))
-		client.Send("invalid", fmt.Sprintf("failed to serialise %s", player.Name), id)
+		slog.Warn(fmt.Sprintf("cannot serialise p %s", p.Name))
+		client.Send("invalid", fmt.Sprintf("failed to serialise %s", p.Name), id)
 		return
 	}
 

@@ -32,7 +32,7 @@ func ProcessRegistration(
 	}
 	repository.AddPlayer(p)
 
-	serialisedPlayer, err := p.Serialise()
+	serialisedPlayer, err := p.MarshalJSON()
 
 	if err != nil {
 		slog.Warn(fmt.Sprintf("cannot serialise p %s", p.Name))

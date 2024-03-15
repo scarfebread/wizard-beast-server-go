@@ -12,7 +12,7 @@ import (
 func main() {
 	wg := &sync.WaitGroup{}
 
-	wg.Add(2)
+	wg.Add(2) // TODO how does this work with embedded goroutines?
 
 	playerRepository := player.NewRepository()
 	server := udp.Server{

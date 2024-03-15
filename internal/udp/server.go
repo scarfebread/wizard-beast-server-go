@@ -68,7 +68,7 @@ func (server Server) processEvent(conn *net.UDPConn) {
 
 	client := Client{conn, addr}
 
-	server.Processor.Process(
+	go server.Processor.Process(
 		id,
 		event,
 		payload,

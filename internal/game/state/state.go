@@ -1,6 +1,9 @@
 package state
 
-import "github.com/scarfebread/wizard-beast-server-go/internal/player"
+import (
+	"github.com/scarfebread/wizard-beast-server-go/internal/game/state/publishable"
+	"github.com/scarfebread/wizard-beast-server-go/internal/player"
+)
 
 var snapshots = make(map[int64]State)
 
@@ -16,6 +19,9 @@ func Snapshot(id int64, players []player.Player) {
 	delete(snapshots, id-64)
 }
 
-func BuildState(snapshot int64, player player.Player) string {
-	return ""
+func BuildState(snapshot int64, player player.Player) publishable.State {
+	return publishable.State{
+		ID:     snapshot,
+		Player: player,
+	}
 }

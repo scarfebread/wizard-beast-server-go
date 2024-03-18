@@ -1,17 +1,15 @@
 package player
 
-import (
-	"fmt"
-	"log/slog"
-)
-
 type Repository struct {
 	players []Player
 	ch      chan Player
 }
 
 func NewRepository() Repository {
-	repository := Repository{}
+	repository := Repository{
+		players: make([]Player, 0),
+		ch:      make(chan Player),
+	}
 	go repository.consumeNewPlayers()
 	return repository
 }
@@ -25,10 +23,7 @@ func (r Repository) AddPlayer(player Player) {
 }
 
 func (r Repository) consumeNewPlayers() {
-	r.ch = make(chan Player)
-
 	for i := range r.ch {
-		slog.Info(fmt.Sprintf("registered %s", i.Name))
 		r.players = append(r.players, i)
 	}
 }

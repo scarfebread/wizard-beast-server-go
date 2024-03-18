@@ -1,9 +1,11 @@
 package game
 
 import (
+	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/scarfebread/wizard-beast-server-go/internal/game/state"
 	"github.com/scarfebread/wizard-beast-server-go/internal/player"
+	"log/slog"
 	"time"
 )
 
@@ -11,6 +13,7 @@ var lastTick time.Time
 
 type Engine struct {
 	PlayerRepository player.Repository
+	Simulator        Simulator
 }
 
 func (engine Engine) Start() error {
@@ -20,10 +23,14 @@ func (engine Engine) Start() error {
 	for {
 		var startTime = time.Now()
 
+		state.Snapshot(snapshot, engine.PlayerRepository.Players())
+		engine.Simulator.ProcessMovement(lastTick, tick)
 		engine.publish(snapshot)
 
 		if elapsed := time.Now().Sub(startTime); elapsed < tick {
 			time.Sleep(tick - elapsed)
+		} else {
+			slog.Warn("engine tick took longer than the allocated time")
 		}
 
 		snapshot++
@@ -32,12 +39,16 @@ func (engine Engine) Start() error {
 }
 
 func (engine Engine) publish(id int64) {
-	state.Snapshot(id, engine.PlayerRepository.Players())
-
 	for _, p := range engine.PlayerRepository.Players() {
-		p.Client.Send(
+		jsonState, err := json.Marshal(state.BuildState(id, p))
+
+		if err != nil {
+			slog.Error("failed to serialise jsonState", err)
+		}
+
+		go p.Client.Send(
 			"state",
-			state.BuildState(id, p),
+			string(jsonState),
 			uuid.New().String(),
 		)
 	}

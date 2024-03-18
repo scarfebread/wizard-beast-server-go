@@ -2,7 +2,6 @@ package udp
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 	"net"
 	"strings"
@@ -17,7 +16,6 @@ type Processor interface {
 		id string,
 		event string,
 		payload string,
-		addr *net.UDPAddr,
 		client Client,
 	)
 }
@@ -51,18 +49,18 @@ func (server Server) Start() error {
 }
 
 func (server Server) processEvent(conn *net.UDPConn) {
-	var buf [512]byte
-	_, addr, err := conn.ReadFromUDP(buf[0:])
+	buf := make([]byte, 512)
+	n, addr, err := conn.ReadFromUDP(buf)
 
 	if err != nil {
 		slog.Error("failed to read from UDP socket", err)
 		return
 	}
 
-	event, payload, id, err := extract(buf)
+	event, payload, id, err := extract(buf[:n])
 
 	if err != nil {
-		slog.Warn(fmt.Sprintf("invalid request - %s", string(buf[0:])), err)
+		slog.Warn("unable to extract infromation from the request", "request", buf[:n], "error", err)
 		return
 	}
 
@@ -72,16 +70,15 @@ func (server Server) processEvent(conn *net.UDPConn) {
 		id,
 		event,
 		payload,
-		addr,
 		client,
 	)
 }
 
-func extract(buf [512]byte) (event string, payload string, id string, err error) {
+func extract(buf []byte) (event string, payload string, id string, err error) {
 	split := strings.Split(string(buf[0:]), "--")
 
 	if len(split) != 3 {
-		err = errors.New("invalid request")
+		err = errors.New("invalid request: the request should have 3 parts delimited by '--'")
 		return
 	}
 

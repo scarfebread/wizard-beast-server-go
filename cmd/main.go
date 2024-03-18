@@ -15,11 +15,15 @@ func main() {
 	wg.Add(2) // TODO how does this work with embedded goroutines?
 
 	playerRepository := player.NewRepository()
+	simulator := game.Simulator{
+		PlayerRepository: playerRepository,
+	}
 	server := udp.Server{
 		Processor: request.Processor{PlayerRepository: playerRepository},
 	}
 	engine := game.Engine{
 		PlayerRepository: playerRepository,
+		Simulator:        simulator,
 	}
 
 	go startServer(wg, server)

@@ -6,13 +6,18 @@ import (
 )
 
 type Player struct {
-	Id         string
+	ID         string
 	Name       string
 	X          float32
 	Y          float32
 	Input      Input
 	InputQueue []Input
 	Client     udp.Client
+}
+
+type Action struct {
+	Key     int  `json:"key"`
+	Pressed bool `json:"currentlyPressed"`
 }
 
 type Input struct {
@@ -24,7 +29,7 @@ type Input struct {
 
 func (p Player) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]interface{}{
-		"id":   p.Id,
+		"id":   p.ID,
 		"name": p.Name,
 		"x":    p.X,
 		"y":    p.Y,

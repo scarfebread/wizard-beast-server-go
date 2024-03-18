@@ -1,20 +1,20 @@
 package request
 
 import (
+	"github.com/scarfebread/wizard-beast-server-go/internal/game"
 	"github.com/scarfebread/wizard-beast-server-go/internal/player"
 	"github.com/scarfebread/wizard-beast-server-go/internal/udp"
-	"net"
 )
 
 type Processor struct {
 	PlayerRepository player.Repository
+	Simulator        game.Simulator
 }
 
 func (processor Processor) Process(
 	id string,
 	event string,
 	payload string,
-	addr *net.UDPAddr,
 	client udp.Client,
 ) {
 	switch event {
@@ -28,7 +28,7 @@ func (processor Processor) Process(
 	case "deregister":
 		ProcessDeregistration(payload, processor.PlayerRepository)
 	case "update":
-		ProcessAction(payload, processor.PlayerRepository)
+		ProcessAction(payload, processor.Simulator)
 	case "acknowledge":
 		ProcessAcknowledge(payload, processor.PlayerRepository)
 	default:

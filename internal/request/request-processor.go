@@ -26,7 +26,11 @@ func (processor Processor) Process(
 			client,
 		)
 	case "deregister":
-		ProcessDeregistration(payload, processor.PlayerRepository)
+		ProcessDeregistration(
+			payload,
+			processor.PlayerRepository,
+			client,
+		)
 	case "update":
 		ProcessAction(payload, processor.Simulator)
 	case "acknowledge":

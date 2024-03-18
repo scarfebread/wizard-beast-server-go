@@ -13,6 +13,7 @@ type Player struct {
 	Input      Input
 	InputQueue []Input
 	Client     udp.Client
+	delete     bool
 }
 
 type Action struct {

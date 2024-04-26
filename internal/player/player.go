@@ -6,14 +6,15 @@ import (
 )
 
 type Player struct {
-	ID         string
-	Name       string
-	X          float32
-	Y          float32
-	Input      Input
-	InputQueue []Input
-	Client     udp.Client
-	delete     bool
+	ID             string
+	Name           string
+	X              float32
+	Y              float32
+	Input          Input
+	InputQueue     []Input
+	Client         udp.Client
+	ConfirmedState int64
+	delete         bool
 }
 
 type Action struct {

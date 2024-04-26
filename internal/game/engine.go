@@ -20,7 +20,11 @@ func (engine Engine) Start() error {
 	tick := time.Second / 64
 	snapshot := int64(0)
 
+	// create an initial snapshot to compare against
+	state.Snapshot(snapshot, engine.PlayerRepository.Players())
+
 	for {
+		snapshot++
 		var startTime = time.Now()
 
 		state.Snapshot(snapshot, engine.PlayerRepository.Players())
@@ -33,7 +37,6 @@ func (engine Engine) Start() error {
 			slog.Warn("engine tick took longer than the allocated time")
 		}
 
-		snapshot++
 		lastTick = startTime
 	}
 }
